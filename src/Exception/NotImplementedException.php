@@ -6,7 +6,7 @@
  * Time: 09:55
  */
 
-namespace Application\Util\Exception;
+namespace OrmX\Exception;
 
 
 class NotImplementedException extends \Exception

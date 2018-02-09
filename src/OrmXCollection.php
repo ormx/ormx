@@ -9,10 +9,10 @@
  *
  */
 
-namespace Application\Util;
+namespace OrmX;
 
-use Application\Util\Exception\InvocationException;
-use Application\Util\Exception\NotFoundException;
+use OrmX\Exception\InvocationException;
+use OrmX\Exception\NotFoundException;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\Delete;
@@ -187,7 +187,8 @@ class OrmXCollection implements OrmXCollectionInterface
     }
 
     /**
-     *
+     * @return null|void
+     * @throws \Exception
      */
     public function destroy()
     {
@@ -231,7 +232,7 @@ class OrmXCollection implements OrmXCollectionInterface
         $insert->into($class::$tableName);
         $newId = null;
         /** @var OrmXAbstract $class */
-        $firstPrimaryKey = reset($class::$primaryKeys);
+        $firstPrimaryKey = \reset($class::$primaryKeys);
 
         $platform = $this->getAdapter()
                          ->getPlatform();
@@ -336,7 +337,7 @@ class OrmXCollection implements OrmXCollectionInterface
         $mapping = $class::$mapping;
         /** @var OrmXAbstract $joinModel */
         foreach ($class::$joins as $joinModel => $joinType) {
-            $mapping = array_merge($mapping, $joinModel::$mapping);
+            $mapping = \array_merge($mapping, $joinModel::$mapping);
         }
 
         return $mapping;
@@ -346,8 +347,8 @@ class OrmXCollection implements OrmXCollectionInterface
      * @param null|string $class
      * @param bool $invoke
      * @return array|ArrayObject
-     * @throws \Application\Util\Exception\InvocationException
-     * @throws \Application\Util\Exception\NotFoundException
+     * @throws \OrmX\Exception\InvocationException
+     * @throws \OrmX\Exception\NotFoundException
      * @throws \Exception
      */
     protected function fetch($class = null, $invoke = false)
@@ -449,7 +450,7 @@ class OrmXCollection implements OrmXCollectionInterface
                         $id = $newObject->$getter();
                     } else {
                         if (\is_array($newObject->getId())) {
-                            $id = implode(array_values($newObject->getId()));
+                            $id = \implode(\array_values($newObject->getId()));
                         } else {
                             $id = $newObject->getId();
                         }
@@ -488,13 +489,13 @@ class OrmXCollection implements OrmXCollectionInterface
             foreach ($mapping as $key => $value) {
                 if (isset($class::$sqlMapping[$key])) {
                     $newValue = $class::$sqlMapping[$key];
-                    $mapped[$value] = new Expression(str_replace(':?', self::atSc($class, $key), $newValue));
+                    $mapped[$value] = new Expression(\str_replace(':?', self::atSc($class, $key), $newValue));
                 } else {
                     $mapped[] = $value;
                 }
             }
         } else {
-            $mapped = array_values($mapping);
+            $mapped = \array_values($mapping);
         }
         $select->columns($mapped);
 
@@ -560,7 +561,7 @@ class OrmXCollection implements OrmXCollectionInterface
             $joinTableIdentifier = new TableIdentifier($tableNameToJoin, $joinModel::$schema);
 
             //remove any duplicate columns
-            $columns = array_diff(array_values($joinModel::$mapping), array_values($class::$mapping));
+            $columns = \array_diff(\array_values($joinModel::$mapping), \array_values($class::$mapping));
             $select->join($joinTableIdentifier, $onString, $columns, $joinType);
 
         }
@@ -582,6 +583,12 @@ class OrmXCollection implements OrmXCollectionInterface
         return $select;
     }
 
+    /**
+     * @param $query
+     * @param bool $asArray
+     * @return array|bool|mixed|null|\Zend\Db\Adapter\Driver\ResultInterface|ResultSet
+     * @throws \Exception
+     */
     public function execute($query, $asArray = false)
     {
         if ($query instanceof PreparableSqlInterface) {

@@ -6,7 +6,7 @@
  * Time: 09:56
  */
 
-namespace Application\Util\Exception;
+namespace OrmX\Exception;
 
 
 class NotFoundException extends \Exception

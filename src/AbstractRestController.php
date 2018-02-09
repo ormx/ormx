@@ -6,7 +6,7 @@
  * Time: 13:35
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 use Application\Controller\LoginController;
 use Zend\Mvc\Controller\AbstractRestfulController;
@@ -56,7 +56,7 @@ abstract class AbstractRestController extends AbstractRestfulController
     {
         try {
             $return = parent::onDispatch($e);
-        } catch (Exception $t) {
+        } catch (\Exception $t) {
             $this->getResponse()
                  ->setStatusCode(Util::httpStatus($t->getCode()));
 

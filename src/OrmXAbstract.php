@@ -6,11 +6,11 @@
  * Time: 14:12
  */
 
-namespace Application\Util;
+namespace OrmX;
 
-use Application\Util\Exception\InvocationException;
-use Application\Util\Exception\NotFoundException;
-use Application\Util\Exception\NotImplementedException;
+use OrmX\Exception\InvocationException;
+use OrmX\Exception\NotFoundException;
+use OrmX\Exception\NotImplementedException;
 use RuntimeException;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Where;
@@ -38,15 +38,15 @@ abstract class OrmXAbstract implements OrmXInterface
      * ID's must match the declared order of the primary keys
      * OrmXAbstract constructor.
      * @param array $id
-     * @throws \Application\Util\Exception\InvocationException
+     * @throws \OrmX\Exception\InvocationException
      * @throws \Exception
      */
     public function __construct(...$id)
     {
-        $lastOfArray = end($id);
+        $lastOfArray = \end($id);
         if ($lastOfArray instanceof Adapter) {
             $this->setAdapter($lastOfArray);
-            array_pop($id);
+            \array_pop($id);
         }
 
         if (empty($id)) {
@@ -154,12 +154,12 @@ abstract class OrmXAbstract implements OrmXInterface
     {
         if (empty($mapping)) {
             if (\is_object($object)) {
-                if (is_a($object, 'ArrayObject')) {
+                if (\is_a($object, 'ArrayObject')) {
                     /** @var array $mapping */
                     $mapping = static::$mapping;
                 } else {
                     // object variable names are the same as internal names
-                    $mapping = array_combine(array_keys(static::$mapping), array_keys(static::$mapping));
+                    $mapping = \array_combine(array_keys(static::$mapping), array_keys(static::$mapping));
                 }
             } else {
                 throw new \RuntimeException('Passed parameter is not an object');
@@ -199,7 +199,7 @@ abstract class OrmXAbstract implements OrmXInterface
         if (!isset($this->{$name}) || \is_array($this->{$name})) {
             $this->getChildren($name);
             //assigned the only value to it's $name so it is no longer an array
-            $this->{$name} = reset($this->{$name});
+            $this->{$name} = \reset($this->{$name});
         }
 
         return $this->{$name};
@@ -307,7 +307,7 @@ abstract class OrmXAbstract implements OrmXInterface
     /**
      *saves the object and any children to the connection
      * @throws \Exception
-     * @throws \Application\Util\Exception\NotImplementedException
+     * @throws \OrmX\Exception\NotImplementedException
      */
     public function store()
     {
@@ -344,7 +344,7 @@ abstract class OrmXAbstract implements OrmXInterface
         }
 
         if (\count($returnData) === 1) {
-            return reset($returnData);
+            return \reset($returnData);
         }
 
         return $returnData;
@@ -357,6 +357,11 @@ abstract class OrmXAbstract implements OrmXInterface
         return $this;
     }
 
+    /**
+     * @param array $values
+     * @return OrmXInterface|void
+     * @throws \Exception
+     */
     public function get(array $values)
     {
         $self = $this->getCollection('self');
@@ -400,7 +405,7 @@ abstract class OrmXAbstract implements OrmXInterface
         //otherwise set it to it's type if it has a mapping
         if (isset($mapping[$name])) {
             $type = $mapping[$name];
-            settype($value, $type);
+            \settype($value, $type);
 
             return $value;
         }
@@ -432,7 +437,6 @@ abstract class OrmXAbstract implements OrmXInterface
      */
     public function getCollection($name, $childClass = null)
     {
-
         /*If we have a collection already use that otherwise generate a default one*/
         if (!isset($this->collections[$name])) {
             $collection = new OrmXCollection(static::class);
@@ -596,11 +600,17 @@ abstract class OrmXAbstract implements OrmXInterface
         $this->{$name} = $children;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     * @throws \Exception
+     */
     public function getParent($name)
     {
         if (!isset($this->{$name})) {
 
             /** @var OrmXAbstract::class $parentObjectName */
+            /** @var OrmXAbstract $parentObject */
             $parentObjectName = static::$parentClasses[$name];
             $parentObjectValues = [];
             foreach ($parentObjectName::$primaryKeys as $parentPrimaryKey) {
@@ -643,12 +653,12 @@ abstract class OrmXAbstract implements OrmXInterface
      */
     public function __call($method, $args)
     {
-        $type = substr($method, 0, 3);
-        $name = $this->psr2VariableName(substr($method, 3));
+        $type = \substr($method, 0, 3);
+        $name = $this->psr2VariableName(\substr($method, 3));
 
         //if it's a mapped element you can get or set if it is a child, then you can't set
         //use add
-        if (array_key_exists($name, $this->getMapping())) {
+        if (\array_key_exists($name, $this->getMapping())) {
             switch ($type) {
                 case 'get':
                     return $this->{$name};
@@ -672,7 +682,7 @@ abstract class OrmXAbstract implements OrmXInterface
     private function psr2VariableName($value)
     {
         //set the first character to lowercase
-        return strtolower($value[0]) . substr($value, 1);
+        return \strtolower($value[0]) . \substr($value, 1);
     }
 
     /**

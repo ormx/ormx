@@ -6,7 +6,7 @@
  * Time: 16:30
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 use Zend\Db\Adapter\Adapter;
 

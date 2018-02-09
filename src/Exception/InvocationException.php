@@ -6,7 +6,7 @@
  * Time: 09:59
  */
 
-namespace Application\Util\Exception;
+namespace OrmX\Exception;
 
 
 class InvocationException extends \Exception

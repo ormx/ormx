@@ -6,7 +6,7 @@
  * Time: 13:42
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 
 class Util
@@ -82,9 +82,9 @@ class Util
 
     public static function utf8Encode($ascii)
     {
-        $binary = pack('H*', 'EFBBBF');
+        $binary = \pack('H*', 'EFBBBF');
 
-        return preg_replace("/^$binary/", '', $ascii);
+        return \preg_replace("/^$binary/", '', $ascii);
     }
 
     /**
@@ -103,12 +103,12 @@ class Util
     public static function psr2VariableName($value)
     {
         //set the first charater to lowercase
-        return strtolower($value[0]) . substr($value, 1);
+        return \strtolower($value[0]) . \substr($value, 1);
     }
 
     public static function makeSetter($variable)
     {
-        return 'set' . strtoupper($variable[0]) . substr($variable, 1);
+        return 'set' . \strtoupper($variable[0]) . \substr($variable, 1);
     }
 
     /**
@@ -117,7 +117,7 @@ class Util
      */
     public static function makeGetter($variable)
     {
-        return 'get' . strtoupper($variable[0]) . substr($variable, 1);
+        return 'get' . \strtoupper($variable[0]) . \substr($variable, 1);
     }
 
 }

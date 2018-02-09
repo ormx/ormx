@@ -20,13 +20,22 @@
  *
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 final class DiFactory implements FactoryInterface
 {
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return mixed|object
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $controller = (null === $options) ? new $requestedName : new $requestedName($options);
@@ -44,9 +53,9 @@ final class DiFactory implements FactoryInterface
                     $method = $reflector->getMethod($setter);
                     $comment = $method->getDocComment();
                     $dependencies = [];
-                    preg_match('/.*@inject (\S+)/', $comment, $dependencies);
+                    \preg_match('/.*@inject (\S+)/', $comment, $dependencies);
                     if (\count($dependencies) === 2) {
-                        $dependancy = trim(array_pop($dependencies));
+                        $dependancy = \trim(\array_pop($dependencies));
                         $controller->{$setter}($container->get($dependancy));
                     }
                 }

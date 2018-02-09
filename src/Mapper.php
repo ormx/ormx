@@ -6,7 +6,7 @@
  * Time: 12:15
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 class Mapper
 {
@@ -43,7 +43,7 @@ class Mapper
     private function generateMap()
     {
         if (\count($this->inputMap) === \count($this->outputMap)) {
-            $this->map = array_combine($this->inputMap, $this->outputMap);
+            $this->map = \array_combine($this->inputMap, $this->outputMap);
         }
     }
 
@@ -67,7 +67,7 @@ class Mapper
     {
         $temp = $this->map([$data]);
 
-        return reset($temp);
+        return \reset($temp);
     }
 
     /**
@@ -85,7 +85,7 @@ class Mapper
             return $returnData;
         }
 
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             $data = [$data];
         }
 
@@ -145,8 +145,8 @@ class Mapper
      */
     public function setMap(array $map)
     {
-        $this->setInputMap(array_keys($map));
-        $this->setOutputMap(array_values($map));
+        $this->setInputMap(\array_keys($map));
+        $this->setOutputMap(\array_values($map));
 
         return $this;
     }

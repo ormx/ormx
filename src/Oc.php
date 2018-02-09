@@ -6,7 +6,7 @@
  * Time: 14:53
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 /*Alias class*/
 

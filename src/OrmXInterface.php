@@ -6,7 +6,7 @@
  * Time: 14:12
  */
 
-namespace Application\Util;
+namespace OrmX;
 
 use Zend\Db\Adapter\Adapter;
 
@@ -97,7 +97,7 @@ interface OrmXInterface
      * Set the values of the object, with the values of the passed in object
      * @param $object
      * @param array $mapping
-     * @return
+     * @return OrmXInterface
      */
     public function set($object, $mapping);
 
