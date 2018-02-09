@@ -5,7 +5,7 @@
   "homepage": "https://github.com/ormx/ormx",
   "autoload": {
     "psr-4": {
-      "ormx\\": "ormx/"
+      "OrmX\\": "src/"
     }
   }
 }
