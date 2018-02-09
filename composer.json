@@ -1,0 +1,11 @@
+{
+  "name": "ormx/ormx",
+  "type": "library",
+  "description": "KOgent/OrmX",
+  "homepage": "https://github.com/ormx/ormx",
+  "autoload": {
+    "psr-4": {
+      "ormx\\": "ormx/"
+    }
+  }
+}
