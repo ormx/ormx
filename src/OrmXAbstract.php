@@ -405,7 +405,9 @@ abstract class OrmXAbstract implements OrmXInterface
         //otherwise set it to it's type if it has a mapping
         if (isset($mapping[$name])) {
             $type = $mapping[$name];
-            \settype($value, $type);
+            if (!\is_null($value)) {
+                \settype($value, $type);
+            }
 
             return $value;
         }
