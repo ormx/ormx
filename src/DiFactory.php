@@ -27,6 +27,39 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 final class DiFactory implements FactoryInterface
 {
+    
+    private static $container;
+
+    public static function create(string $class)
+    {
+        $controller = new $class();
+
+        $reflector  = new \ReflectionClass($controller);
+        $properties = $reflector->getProperties();
+
+        /** @var \ReflectionProperty $property */
+        foreach ($properties as $property) {
+            //find the setter and read the doc block for @inject
+            $setter = Util::makeSetter($property->getName());
+            if ($reflector->hasMethod($setter)) {
+                $method       = $reflector->getMethod($setter);
+                $comment      = $method->getDocComment();
+                $dependencies = [];
+                \preg_match_all('/.*@inject (\S+)/', $comment, $dependencies);
+                if (\count($dependencies) === 2) {
+                    $dependencies = $dependencies[1];
+                    foreach ($dependencies as $depenency) {
+                        $dependancy = \trim($depenency);
+                        $controller->{$setter}(static::$container->get($dependancy));
+                    }
+                }
+            }
+        }
+
+        return $controller;
+    }
+    
+    
     /**
      * @param ContainerInterface $container
      * @param string $requestedName
