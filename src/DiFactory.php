@@ -71,6 +71,8 @@ final class DiFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        static::$container = $container;
+
         $controller = (null === $options) ? new $requestedName : new $requestedName($options);
 
         $reflector = new \ReflectionClass($controller);
