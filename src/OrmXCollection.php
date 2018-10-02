@@ -213,6 +213,18 @@ class OrmXCollection implements OrmXCollectionInterface
         $update->table($class::$tableName);
 
         $update->where($this->getConditions());
+        
+        $platform = $this->getAdapter()
+                         ->getPlatform();
+        
+        /** @var Platform $platform */
+        $platformName = $platform->getName();
+
+        if ($platformName === 'MySQL'){
+            unset($values['created_ts']);
+            unset($values['updated_ts']);
+        }
+        
         $update->set($values);
 
         $this->execute($update);
@@ -248,6 +260,11 @@ class OrmXCollection implements OrmXCollectionInterface
             $newId = $result->current()['nextval'];
             /** @var OrmXAbstract $class */
             $values[$firstPrimaryKey] = $newId;
+        }
+        
+        if ($platformName === 'MySQL'){
+            unset($values['created_ts']);
+            unset($values['updated_ts']);
         }
 
         $insert->values($values);
